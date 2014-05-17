@@ -19,24 +19,35 @@ CMD ["/sbin/my_init"]
 ADD sources.list /etc/apt/sources.list
 RUN apt-get update
 
-# install ca-certificates
-RUN apt-get install -q -y ca-certificates
+# install tools
+RUN apt-get install -q -y ca-certificates git vim
 
-# install ruby
-RUN \curl -sSL https://get.rvm.io | bash -s
-RUN /bin/bash -l -c "rvm requirements"
-RUN /bin/bash -l -c "rvm install ruby-2.1"
-RUN /bin/bash -l -c "rvm use --default ruby-2.1"
+# install ruby dependencies
+RUN apt-get update && apt-get install -y \
+      build-essential \
+      zlib1g-dev \
+      libssl-dev \
+      libreadline6-dev \
+      libyaml-dev
+
+# install ruby from source and cleanup afterward (from murielsalvan/ruby)
+ADD http://ruby.taobao.org/mirrors/ruby/ruby-2.1.2.tar.gz /tmp/
+RUN cd /tmp && \
+      tar -xzf ruby-2.1.2.tar.gz && \
+      cd ruby-2.1.2 && \
+      ./configure && \
+      make && \
+      make install && \
+      cd .. && \
+      rm -rf ruby-2.1.2 && \
+      rm -f ruby-2.1.2.tar.gz
 
 # set gem sources to ruby.taobao.org
-RUN /bin/bash -l -c "gem sources --remove https://rubygems.org/"
-RUN /bin/bash -l -c "gem sources -a https://ruby.taobao.org/"
+RUN gem sources --remove https://rubygems.org/
+RUN gem sources -a https://ruby.taobao.org/
 
-# install bundler
-RUN /bin/bash -l -c "gem install bundler --no-ri --no-rdoc"
-
-# install tools
-RUN apt-get install -q -y git vim
+# install base gem
+RUN gem install bundler
 
 # Add ssh keys
 ADD docker_vm.pub /tmp/my_key
@@ -44,4 +55,3 @@ RUN cat /tmp/my_key >> /root/.ssh/authorized_keys && rm -f /tmp/my_key
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
