@@ -1,0 +1,21 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  # This is my docker host box
+  config.vm.box = "docker-host-01"
+  config.vm.hostname = "dh01"
+
+  # Forward port for rails app
+  config.vm.network "forwarded_port", guest: 3000, host: 3000
+  # Forward port for container's ssh
+  config.vm.network "forwarded_port", guest: 2244, host: 2200
+  
+  # Fixed the mapping of the app's folder
+  config.vm.synced_folder "../", "/var/lib/docker_root"
+
+end
