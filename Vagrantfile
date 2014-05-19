@@ -32,6 +32,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # use own key file
     rails.ssh.private_key_path = "dockerfiles/docker_vm.key"
     rails.ssh.username = "root"
+    rails.ssh.port = "22"
   end
 
 

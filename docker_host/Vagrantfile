@@ -13,7 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Forward port for rails app
   config.vm.network "forwarded_port", guest: 3000, host: 3000
   # Forward port for container's ssh
-  config.vm.network "forwarded_port", guest: 2244, host: 2200
+  config.vm.network "forwarded_port", guest: 2244, host: 2244
   
   # Fixed the mapping of the app's folder
   config.vm.synced_folder "../", "/var/lib/docker_root"
