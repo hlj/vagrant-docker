@@ -7,4 +7,4 @@
 /tmp/*
 
 .vagrant
-
+.idea

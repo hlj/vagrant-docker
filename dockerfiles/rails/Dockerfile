@@ -55,5 +55,10 @@ RUN cat /tmp/my_key >> /root/.ssh/authorized_keys && rm -f /tmp/my_key
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Add other init script
+RUN mkdir -p /etc/my_init.d
+ADD dump_link_env.sh /etc/my_init.d/dump_link_env.sh
+RUN chmod a+x /etc/my_init.d/dump_link_env.sh
+
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
