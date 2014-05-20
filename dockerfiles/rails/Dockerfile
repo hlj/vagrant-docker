@@ -55,10 +55,11 @@ RUN cat /tmp/my_key >> /root/.ssh/authorized_keys && rm -f /tmp/my_key
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Add other init script
-RUN mkdir -p /etc/my_init.d
+# dump environment variables for container's link, required in development.
 ADD dump_link_env.sh /etc/my_init.d/dump_link_env.sh
-RUN chmod a+x /etc/my_init.d/dump_link_env.sh
+RUN chmod a+x /etc/my_init.d/*
+# Allow sshd load these environment variables
+RUN echo 'PermitUserEnvironment yes' >> /etc/ssh/sshd_config
 
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
