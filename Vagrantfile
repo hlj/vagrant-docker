@@ -13,7 +13,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      d.vagrant_vagrantfile = "docker_host/Vagrantfile"
      d.image = "dockerfile/redis"
      d.name = "demo_db"
-     #d.force_host_vm = true
    end
   end
 
@@ -27,14 +26,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       d.has_ssh = true
       # Mapping to the host, only need in Host VM.
       d.volumes = ["/var/lib/docker_root:/vagrant"]
-      #d.force_host_vm = true
     end
 
-    # use own key file
+    # Use own key file
     rails.ssh.private_key_path = "dockerfiles/docker_vm.key"
     rails.ssh.username = "root"
     rails.ssh.port = "22"
   end
-
-
 end
